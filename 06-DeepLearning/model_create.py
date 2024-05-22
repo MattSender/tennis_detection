@@ -10,18 +10,6 @@ from sklearn.model_selection import train_test_split
 import os
 import ast
 
-# Fonction pour transformer l'image en noir et blanc avec lignes de terrain mises en valeur
-def enhance_lines(image):
-    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-    h, s, v = cv2.split(hsv)
-    s = cv2.add(s, 50)
-    v = cv2.add(v, 50)
-    hsv_enhanced = cv2.merge([h, s, v])
-    vibrant_image = cv2.cvtColor(hsv_enhanced, cv2.COLOR_HSV2BGR)
-    gray = cv2.cvtColor(vibrant_image, cv2.COLOR_BGR2GRAY)
-    _, darkened = cv2.threshold(gray, 150, 255, cv2.THRESH_BINARY_INV)
-    return darkened
-
 # Charger les annotations
 annotations = pd.read_csv('annotations.csv')
 
@@ -40,11 +28,10 @@ def load_data(annotations, img_dir, img_size=(1024, 768)):
     for index, row in annotations.iterrows():
         img_path = os.path.join(img_dir, row["filename"])
         if os.path.exists(img_path):
-            img = cv2.imread(img_path)
+            img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
             if img is not None:
                 img = cv2.resize(img, img_size)
-                enhanced_img = enhance_lines(img)
-                images.append(enhanced_img)
+                images.append(img)
                 topleft = parse_point(row['topleft'])
                 topright = parse_point(row['topright'])
                 bottomright = parse_point(row['bottomright'])
@@ -65,7 +52,9 @@ def load_data(annotations, img_dir, img_size=(1024, 768)):
 
 # Prétraiter les données
 img_size = (1024, 768)
-img_dir = 'vierge/'
+img_dir = 'img' \
+          ''
+# Assurez-vous que le chemin vers le dossier contenant les images est correct
 X, y = load_data(annotations, img_dir, img_size)
 if X.size == 0 or y.size == 0:
     raise ValueError("No images loaded. Please check the image paths and ensure the images exist.")
@@ -104,7 +93,7 @@ model.compile(optimizer=Adam(learning_rate=1e-4), loss='mean_squared_error')
 
 # Entraîner le modèle avec augmentation des données
 history = model.fit(datagen.flow(X_train, y_train, batch_size=32),
-                    epochs=3,
+                    epochs=10,
                     validation_data=(X_val, y_val))
 
 # Sauvegarder le modèle
