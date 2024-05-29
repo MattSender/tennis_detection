@@ -2,7 +2,7 @@ from PIL import Image
 import os
 
 # Chemin du dossier contenant les images
-dossier = 'vierge'
+dossier = '../images/train_data'
 
 # Taille souhaitée pour les images
 nouvelle_largeur = 1024

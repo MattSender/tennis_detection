@@ -3,7 +3,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 # Charger l'image originale
-image_path = 'vierge/img23.jpg'
+image_path = 'images/img23.jpg'
 image = cv2.imread(image_path)
 
 # Convertir en espace de couleur HSV pour augmenter la vibrance et la saturation

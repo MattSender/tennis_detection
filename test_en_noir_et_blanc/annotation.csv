@@ -1,0 +1,20 @@
+filename,topleft,topright,bottomright,bottomleft,topleft_out,topright_out,bottomright_out,bottomleft_out
+img-1.jpg,"(133, 403)","(484, 355)","(870, 467)","(397, 740)",False,False,False,False
+img-2.jpg,"(249, 372)","(665, 363)","(1020, 422)","(422, 586)",False,False,True,False
+img-3.jpg,"(46, 405)","(588, 374)","(1022, 461)","(282, 636)",False,False,True,False
+img-4.jpg,"(116, 370)","(540, 307)","(1008, 445)","(359, 704)",False,False,False,False
+img-5.jpg,"(166, 393)","(577, 357)","(989, 509)","(322, 708)",False,False,False,False
+img-6.jpg,"(4, 390)","(455, 307)","(979, 378)","(455, 667)",True,False,False,False
+img-7.jpg,"(102, 469)","(569, 428)","(1022, 480)","(253, 675)",False,False,True,False
+img-8.jpg,"(4, 403)","(461, 401)","(862, 488)","(282, 602)",False,False,False,False
+img-9.jpg,"(106, 417)","(534, 401)","(968, 476)","(372, 590)",False,False,False,False
+img-10.jpg,"(29, 436)","(511, 413)","(997, 480)","(222, 605)",False,False,False,False
+img-11.jpg,"(102, 461)","(717, 447)","(1020, 494)","(291, 713)",False,False,True,False
+img-12.jpg,"(116, 401)","(490, 351)","(875, 378)","(648, 708)",False,False,False,False
+img-13.jpg,"(100, 486)","(505, 482)","(970, 544)","(276, 681)",False,False,False,False
+img-14.jpg,"(141, 303)","(602, 257)","(1020, 303)","(409, 453)",False,False,True,False
+img-15.jpg,"(66, 542)","(511, 482)","(1012, 534)","(494, 735)",False,False,False,False
+img-16.jpg,"(64, 482)","(590, 451)","(1020, 494)","(459, 663)",False,False,True,False
+img-17.jpg,"(97, 550)","(517, 494)","(970, 519)","(427, 731)",False,False,False,False
+img-18.jpg,"(39, 390)","(538, 353)","(1018, 424)","(507, 675)",False,False,True,False
+img-19.jpg,"(174, 469)","(573, 445)","(1020, 499)","(469, 605)",False,False,False,False
