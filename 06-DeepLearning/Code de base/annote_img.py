@@ -1,54 +1,66 @@
-import cv2
 import os
+import cv2
 import csv
+import matplotlib.pyplot as plt
 
-# Path to the directory containing images
-directory_path = '../vierge'
-# CSV file to store the coordinates
-csv_filename = '../annotations.csv'
+image_directory = '../images/train_data2'
 
-# Function to handle mouse clicks
-def click_event(event, x, y, flags, params):
-    if event == cv2.EVENT_LBUTTONDOWN:
-        # Store the point coordinates
-        points.append((x, y))
-        # Display the point on the image
-        cv2.circle(img, (x, y), 5, (0, 255, 0), -1)
-        cv2.imshow("Image", img)
+def annotate_image(image_path):
+    image = cv2.imread(image_path)
+    fig, ax = plt.subplots()
+    ax.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
 
-# Initialize CSV file
-with open(csv_filename, 'w', newline='') as file:
-    writer = csv.writer(file)
-    writer.writerow(['filename', 'topleft', 'topright', 'bottomright', 'bottomleft'])
+    points = []
 
-# Process each file in the directory
-for filename in os.listdir(directory_path):
-    if filename.lower().endswith(('.png', '.jpg', '.jpeg')):
-        img_path = os.path.join(directory_path, filename)
-        img = cv2.imread(img_path)
-        if img is not None:  # Make sure the image has been loaded correctly
-            # Resize image to 1024x768
-            img = cv2.resize(img, (1024, 768))
-            points = []
+    def onclick(event):
+        if event.xdata is not None and event.ydata is not None:
+            points.append((int(event.xdata), int(event.ydata)))
+            ax.plot(event.xdata, event.ydata, 'ro')
+            fig.canvas.draw()
+        if len(points) == 4:
+            plt.close()
 
-            # Display the image
-            cv2.imshow("Image", img)
-            cv2.setMouseCallback("Image", click_event)
+    fig.canvas.mpl_connect('button_press_event', onclick)
+    plt.show()
 
-            # Wait for the 'p' key to be pressed or 4 points to be clicked
-            while True:
-                key = cv2.waitKey(1) & 0xFF
-                if key == ord('p'):
-                    points.append((-1, -1))
-                if len(points) == 4 or key == 27:  # 27 is the Esc key
-                    break
+    return points
 
-            # Save the points to the CSV
-            with open(csv_filename, 'a', newline='') as file:
-                writer = csv.writer(file)
-                writer.writerow([filename] + points)
-            cv2.destroyAllWindows()
-        else:
-            print(f"Failed to load image {filename}")
+def annotate_images_in_directory(directory):
+    annotations = []
+    for filename in os.listdir(directory):
+        if filename.endswith(".jpg"):
+            image_path = os.path.join(directory, filename)
+            print(f"Annotating {filename}...")
+            points = annotate_image(image_path)
+            if len(points) == 4:
+                annotations.append({
+                    'filename': filename,
+                    'topleft': points[0],
+                    'topright': points[1],
+                    'bottomright': points[2],
+                    'bottomleft': points[3]
+                })
+            else:
+                print(f"Skipping {filename}, not enough points annotated.")
 
-print("Annotation complete. Data saved to", csv_filename)
+    return annotations
+
+def write_annotations_to_csv(annotations, csv_file_path):
+    with open(csv_file_path, 'w', newline='') as csvfile:
+        fieldnames = ['filename', 'topleft', 'topright', 'bottomright', 'bottomleft']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+        writer.writeheader()
+        for annotation in annotations:
+            writer.writerow({
+                'filename': annotation['filename'],
+                'topleft': f"({annotation['topleft'][0]}, {annotation['topleft'][1]})",
+                'topright': f"({annotation['topright'][0]}, {annotation['topright'][1]})",
+                'bottomright': f"({annotation['bottomright'][0]}, {annotation['bottomright'][1]})",
+                'bottomleft': f"({annotation['bottomleft'][0]}, {annotation['bottomleft'][1]})"
+            })
+
+annotations = annotate_images_in_directory(image_directory)
+write_annotations_to_csv(annotations, 'annotations3.csv')
+
+print("Annotation completed and saved to 'annotations3.csv'.")
